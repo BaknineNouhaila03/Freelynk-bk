@@ -35,15 +35,18 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
-//                .requestMatchers("/api/clients/**").hasAuthority("CLIENT")
                 .requestMatchers("/api/clients/**").permitAll()
-//                .requestMatchers("/api/freelancer/**").hasAuthority("FREELANCER")
                 .requestMatchers("/api/freelancers/**").permitAll()
                 .requestMatchers("/api/projects/**").permitAll()
                 .requestMatchers("/api/bids/**").permitAll()
                 .requestMatchers("/api/gigs/**").permitAll()
                 .requestMatchers("/api/savedFreelancers/**").permitAll()
-//                .anyRequest().authenticated()
+                .requestMatchers("/api/notifications/**").permitAll()
+                // Add WebSocket endpoints
+                .requestMatchers("/ws/**").permitAll()
+                .requestMatchers("/ws/info/**").permitAll()
+                .requestMatchers("/topic/**").permitAll()
+                .requestMatchers("/app/**").permitAll()
             )
             .userDetailsService(userDetailsService)
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
@@ -59,7 +62,8 @@ public class SecurityConfig {
         configuration.setAllowCredentials(true);
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", configuration);
+        // Apply CORS to all endpoints, including WebSocket
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
     

@@ -1,5 +1,6 @@
 package org.example.freelynk.service;
 
+import org.example.freelynk.service.NotificationService;
 import org.example.freelynk.dto.AddBidRequest;
 import org.example.freelynk.dto.BidResponseDTO;
 import org.example.freelynk.model.*;
@@ -19,12 +20,14 @@ public class BidService {
     private final BidRepository bidRepository;
     private final ProjectRepository projectRepository;
     private final FreelancerRepository freelancerRepository;
+    private final NotificationService notificationService;
 
     public BidService(BidRepository bidRepository, ProjectRepository projectRepository,
-            FreelancerRepository freelancerRepository) {
+            FreelancerRepository freelancerRepository,NotificationService notificationService) {
         this.bidRepository = bidRepository;
         this.projectRepository = projectRepository;
         this.freelancerRepository = freelancerRepository;
+        this.notificationService=notificationService;
     }
 
     public BidResponseDTO addBid(AddBidRequest request) {
@@ -61,6 +64,9 @@ public class BidService {
         }
         project.setBidNumber(currentBidNumber + 1);
         projectRepository.save(project);
+          UUID clientId = bid.getProject().getClient().getId();
+          String projectName = bid.getProject().getName();
+notificationService.createNotification(clientId, "NEW_BID", "You have a new bid on "+projectName);
         return new BidResponseDTO(savedBid);
     }
 
@@ -114,11 +120,14 @@ public class BidService {
                 if (!other.getId().equals(bid.getId())) {
                     other.setStatus(BidStatus.REJECTED);
                     bidRepository.save(other);
+
                 }
             }
         } else {
             bid.setStatus(newStatus);
             bidRepository.save(bid);
+            
+    String freelancerId = bid.getFreelancer().getId().toString();
         }
     }
 
