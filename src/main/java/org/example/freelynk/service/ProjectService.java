@@ -59,6 +59,11 @@ public List<Project> getAllProjects(){
     return projectRepository.findAll();
 
 }
+// In ProjectService.java
+public List<Project> getProjectsByFreelancerId(UUID freelancerId) {
+    return projectRepository.findByFreelancerId(freelancerId);
+}
+
 
 
 
