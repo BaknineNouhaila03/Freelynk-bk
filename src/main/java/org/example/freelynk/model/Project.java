@@ -47,6 +47,10 @@ public class Project {
     @Column(name = "max_budget")
     private Double maxBudget;
 
+    @Enumerated(EnumType.STRING)
+    private ProjectStatus status;
+
+
     @Column(name = "binding_deadline")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime bindingDeadline;
