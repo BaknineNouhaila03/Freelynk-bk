@@ -66,6 +66,11 @@ public class BidController {
         return ResponseEntity.ok(bidDTOs);
     }
 
+    @GetMapping("/projects/{projectId}")
+    public ResponseEntity<List<Bid>> getBidsForProjectHfs(@PathVariable UUID projectId) {
+        return ResponseEntity.ok(bidService.getBidsForProject(projectId));
+    }
+
     private BidResponseDTO convertToBidResponseDTO(Bid bid) {
         BidResponseDTO dto = new BidResponseDTO();
         dto.setId(bid.getId());
