@@ -3,6 +3,7 @@ package org.example.freelynk.service;
 import org.example.freelynk.dto.AddProjectRequest;
 import org.example.freelynk.model.Client;
 import org.example.freelynk.model.Project;
+import org.example.freelynk.model.ProjectStatus;
 import org.example.freelynk.model.User;
 import org.example.freelynk.repository.ProjectRepository;
 import org.example.freelynk.security.SecurityUtil;
@@ -64,7 +65,27 @@ public List<Project> getProjectsByFreelancerId(UUID freelancerId) {
     return projectRepository.findByFreelancerId(freelancerId);
 }
 
+    public Project markProjectAsDone(UUID projectId, UUID freelancerId) {
+        // Find the project
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new IllegalArgumentException("Project not found with ID: " + projectId));
 
+        // Verify that the project is assigned to the given freelancer
+        if (project.getFreelancer() == null || !project.getFreelancer().getId().equals(freelancerId)) {
+            throw new IllegalStateException("Project is not assigned to this freelancer");
+        }
+
+        // Verify that the project is currently ongoing
+        if (project.getStatus() != ProjectStatus.ONGOING) {
+            throw new IllegalStateException("Only ongoing projects can be marked as done");
+        }
+
+        // Update the project status to DONE
+        project.setStatus(ProjectStatus.DONE);
+
+        // Save and return the updated project
+        return projectRepository.save(project);
+    }
 
 
 

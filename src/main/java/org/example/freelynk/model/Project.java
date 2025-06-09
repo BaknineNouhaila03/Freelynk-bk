@@ -1,5 +1,6 @@
 package org.example.freelynk.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -57,8 +58,8 @@ public class Project {
 
     @ManyToOne
     @JoinColumn(name = "freelancer_id")
+    @JsonManagedReference
     private Freelancer freelancer;
-
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 

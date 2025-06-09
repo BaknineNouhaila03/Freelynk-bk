@@ -52,5 +52,19 @@ public ResponseEntity<?> getProjectsByFreelancerId(@PathVariable UUID freelancer
     return ResponseEntity.ok(projects);
 }
 
+    @PutMapping("/byFreelancer/{freelancerId}/project/{projectId}")
+    public ResponseEntity<?> markProjectAsDone(@PathVariable UUID freelancerId, @PathVariable UUID projectId) {
+        try {
+            Project updatedProject = projectService.markProjectAsDone(projectId, freelancerId);
+            return ResponseEntity.ok(updatedProject);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(403).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("An error occurred while updating the project");
+        }
+    }
+
     
 }

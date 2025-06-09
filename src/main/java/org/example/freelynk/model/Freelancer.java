@@ -1,5 +1,6 @@
 package org.example.freelynk.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -49,6 +50,7 @@ public class Freelancer extends User {
             joinColumns = @JoinColumn(name = "freelancer_id", referencedColumnName = "user_id", columnDefinition = "uuid"),
             inverseJoinColumns = @JoinColumn(name = "project_id", referencedColumnName = "project_id")
     )
+    @JsonBackReference
     private List<Project> savedProjects;
 
 
