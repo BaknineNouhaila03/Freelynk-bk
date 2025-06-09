@@ -38,7 +38,7 @@ public class ProjectService {
         project.setClient(client);
         project.setName(request.getName());
         project.setDescription(request.getDescription());
-        project.setRequiredSkills(request.getRequiredSkills());
+        project.setRequiredSkillsList(request.getRequiredSkills());
         project.setMinBudget(request.getMinBudget());
         project.setMaxBudget(request.getMaxBudget());
         project.setBindingDeadline(request.getBindingDeadline());

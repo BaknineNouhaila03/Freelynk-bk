@@ -49,13 +49,25 @@ public class FreelancerController {
         }
     }
 
+@GetMapping("/category/{category}")
+public ResponseEntity<List<Freelancer>> getFreelancersByCategory(@PathVariable String category) {
+    // Map URL slugs to actual skill names
+    String skillName = mapCategoryToSkill(category);
+    List<Freelancer> freelancers = freelancerService.getFreelancersBySkills(Collections.singletonList(skillName));
+    return new ResponseEntity<>(freelancers, HttpStatus.OK);
+}
 
-    @GetMapping("/category/{category}")
-    public ResponseEntity<List<Freelancer>> getFreelancersByCategory(@PathVariable String category) {
-        List<Freelancer> freelancers = freelancerService.getFreelancersBySkills(Collections.singletonList(category));
-        return new ResponseEntity<>(freelancers, HttpStatus.OK);
-    }
-
+private String mapCategoryToSkill(String category) {
+    Map<String, String> categoryMap = new HashMap<>();
+    categoryMap.put("web-development", "Web Development");
+    categoryMap.put("graphic-design", "Graphic Design");
+    categoryMap.put("writing-translation", "Writing");
+    categoryMap.put("digital-marketing", "Digital Marketing");
+    categoryMap.put("video-animation", "Video Editing");
+    categoryMap.put("business-assistance", "Business");
+    
+    return categoryMap.getOrDefault(category, category);
+}
 
     @GetMapping("/{freelancerEmail}/saved-projects")
     public ResponseEntity<List<Project>> getSavedProjects(@PathVariable String freelancerEmail) {

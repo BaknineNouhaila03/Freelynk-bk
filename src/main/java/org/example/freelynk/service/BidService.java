@@ -8,6 +8,8 @@ import org.example.freelynk.repository.FreelancerRepository;
 import org.example.freelynk.repository.ProjectRepository;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -18,7 +20,8 @@ public class BidService {
     private final ProjectRepository projectRepository;
     private final FreelancerRepository freelancerRepository;
 
-    public BidService(BidRepository bidRepository, ProjectRepository projectRepository, FreelancerRepository freelancerRepository) {
+    public BidService(BidRepository bidRepository, ProjectRepository projectRepository,
+            FreelancerRepository freelancerRepository) {
         this.bidRepository = bidRepository;
         this.projectRepository = projectRepository;
         this.freelancerRepository = freelancerRepository;
@@ -28,11 +31,9 @@ public class BidService {
         Project project = projectRepository.findById(request.getProjectId())
                 .orElseThrow(() -> new RuntimeException("Project not found"));
 
-        // Find freelancer by email
         Freelancer freelancer = freelancerRepository.findByEmail(request.getFreelancerEmail())
                 .orElseThrow(() -> new RuntimeException("Freelancer not found"));
 
-        // Check if freelancer already has a bid for this project
         boolean hasBid = project.getBids().stream()
                 .anyMatch(bid -> bid.getFreelancer().getId().equals(freelancer.getId()));
 
@@ -44,11 +45,9 @@ public class BidService {
         bid.setFreelancer(freelancer);
         bid.setProject(project);
 
-        // Parse the offer string to extract numeric value
         Double bidAmount = parseOfferAmount(request.getOffer());
         bid.setBidAmount(bidAmount);
 
-        // Parse delivery time string to extract days
         Integer deliveryDays = parseDeliveryDays(request.getDeliveryTime());
         bid.setDeliveryDays(deliveryDays);
 
@@ -56,6 +55,12 @@ public class BidService {
         bid.setMotivation(request.getMotivation());
 
         Bid savedBid = bidRepository.save(bid);
+        Integer currentBidNumber = project.getBidNumber();
+        if (currentBidNumber == null) {
+            currentBidNumber = 0; // Handle null case
+        }
+        project.setBidNumber(currentBidNumber + 1);
+        projectRepository.save(project);
         return new BidResponseDTO(savedBid);
     }
 
@@ -64,7 +69,6 @@ public class BidService {
             throw new IllegalArgumentException("Offer amount is required");
         }
 
-        // Remove currency symbols and extract numeric value
         String numericValue = offer.replaceAll("[^0-9.]", "");
         try {
             return Double.parseDouble(numericValue);
@@ -86,7 +90,36 @@ public class BidService {
             throw new IllegalArgumentException("Invalid delivery time format: " + deliveryTime);
         }
     }
+
     public List<Bid> getBidsForProject(UUID projectId) {
         return bidRepository.findByProjectId(projectId);
     }
+
+    @Transactional
+    public void updateBidStatus(UUID bidId, BidStatus newStatus) {
+        Bid bid = bidRepository.findById(bidId)
+                .orElseThrow(() -> new RuntimeException("Bid not found"));
+
+        Project project = bid.getProject();
+
+        if (newStatus == BidStatus.ACCEPTED && bid.getStatus() != BidStatus.ACCEPTED) {
+            bid.setStatus(BidStatus.ACCEPTED);
+            bidRepository.save(bid);
+
+            project.setFreelancer(bid.getFreelancer());
+            projectRepository.save(project);
+
+            List<Bid> otherBids = bidRepository.findByProjectId(project.getId());
+            for (Bid other : otherBids) {
+                if (!other.getId().equals(bid.getId())) {
+                    other.setStatus(BidStatus.REJECTED);
+                    bidRepository.save(other);
+                }
+            }
+        } else {
+            bid.setStatus(newStatus);
+            bidRepository.save(bid);
+        }
+    }
+
 }
