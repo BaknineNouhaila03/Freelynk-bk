@@ -58,14 +58,11 @@ public class NotificationService {
         }
     }
 
-    /**
-     * Envoie une notification via WebSocket
-     */
+
     private void sendNotificationViaWebSocket(Notification notification) {
         try {
             String destination = "/topic/notifications/" + notification.getUserId();
             
-            // Créer un DTO pour l'envoi WebSocket (évite les références circulaires)
             NotificationMessage notificationMessage = new NotificationMessage(
                 notification.getUserId(),
                 notification.getType(),
@@ -78,7 +75,6 @@ public class NotificationService {
         } catch (Exception e) {
             logger.error("Erreur lors de l'envoi de la notification via WebSocket: {}", 
                         e.getMessage(), e);
-            // Ne pas faire échouer la création de notification si l'envoi WebSocket échoue
         }
     }
     public List<Notification> getUserNotifications(UUID userId) {
