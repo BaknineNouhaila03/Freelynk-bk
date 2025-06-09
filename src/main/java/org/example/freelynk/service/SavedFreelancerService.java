@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class SavedFreelancerService {
@@ -48,8 +49,12 @@ public class SavedFreelancerService {
             .findByClientIdAndFreelancerId(clientId, freelancerId)
             .isPresent();
     }
-    public List<UUID> getBookmarkedFreelancerIds(UUID clientId) {
-    // Assuming you have a repository method or can query your saved_freelancers table
-    return savedFreelancerRepository.findFreelancerIdsByClientId(clientId);
+
+
+public List<UUID> getBookmarkedFreelancerIds(UUID clientId) {
+    List<SavedFreelancer> savedFreelancers = savedFreelancerRepository.findByClientId(clientId);
+    return savedFreelancers.stream()
+            .map(SavedFreelancer::getFreelancerId)
+            .collect(Collectors.toList());
 }
 }

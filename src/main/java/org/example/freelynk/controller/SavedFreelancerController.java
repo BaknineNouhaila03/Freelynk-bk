@@ -1,6 +1,5 @@
 package org.example.freelynk.controller;
 
-
 import org.example.freelynk.dto.SavedFreelancerDTO;
 import org.example.freelynk.model.SavedFreelancer;
 import org.example.freelynk.service.SavedFreelancerService;
@@ -27,6 +26,18 @@ public class SavedFreelancerController {
             List<SavedFreelancerDTO> savedFreelancers = 
                 savedFreelancerService.getSavedFreelancersByClientId(clientId);
             return ResponseEntity.ok(savedFreelancers);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+    
+    // Get all saved freelancer IDs for a client - NEW ENDPOINT
+    @GetMapping("/check")
+    public ResponseEntity<List<UUID>> getBookmarkedFreelancerIds(
+            @RequestParam UUID clientId) {
+        try {
+            List<UUID> bookmarkedIds = savedFreelancerService.getBookmarkedFreelancerIds(clientId);
+            return ResponseEntity.ok(bookmarkedIds);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
@@ -60,8 +71,8 @@ public class SavedFreelancerController {
         }
     }
     
-    // Check if freelancer is saved
-    @GetMapping("/check")
+    // Check if specific freelancer is saved
+    @GetMapping("/check-single")
     public ResponseEntity<Boolean> isFreelancerSaved(
             @RequestParam UUID clientId,
             @RequestParam UUID freelancerId) {

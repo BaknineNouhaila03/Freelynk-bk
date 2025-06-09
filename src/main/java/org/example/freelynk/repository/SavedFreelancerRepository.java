@@ -16,7 +16,7 @@ import java.util.UUID;
 public interface SavedFreelancerRepository extends JpaRepository<SavedFreelancer, Long> {
     
 @Query("SELECT new org.example.freelynk.dto.SavedFreelancerDTO(" +
-       "sf.freelancerId, f.firstName, f.description) " +
+       "sf.freelancerId, f.firstName, f.description,f.occupation,f.rating,f.lastName) " +
        "FROM SavedFreelancer sf " +
        "JOIN Freelancer f ON sf.freelancerId = f.id " +
        "WHERE sf.clientId = :clientId")
