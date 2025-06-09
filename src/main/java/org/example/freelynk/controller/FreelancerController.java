@@ -3,6 +3,7 @@ package org.example.freelynk.controller;
 import org.example.freelynk.model.Freelancer;
 import org.example.freelynk.model.Project;
 import org.example.freelynk.service.FreelancerService;
+import org.example.freelynk.service.SavedFreelancerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +16,12 @@ import java.util.*;
 public class FreelancerController {
 
     private final FreelancerService freelancerService;
+    private final SavedFreelancerService savedFreelancerService;
 
     @Autowired
-    public FreelancerController(FreelancerService freelancerService) {
+    public FreelancerController(FreelancerService freelancerService,SavedFreelancerService savedFreelancerService) {
         this.freelancerService = freelancerService;
+        this.savedFreelancerService=savedFreelancerService;
     }
 
 
@@ -134,5 +137,13 @@ private String mapCategoryToSkill(String category) {
     }
 
 
-
+@GetMapping("/check")
+public ResponseEntity<List<UUID>> getBookmarkedFreelancers(@RequestParam UUID clientId) {
+    try {
+        List<UUID> bookmarkedIds = savedFreelancerService.getBookmarkedFreelancerIds(clientId);
+        return ResponseEntity.ok(bookmarkedIds);
+    } catch (Exception e) {
+        return ResponseEntity.badRequest().body(null);
+    }
+}
 }

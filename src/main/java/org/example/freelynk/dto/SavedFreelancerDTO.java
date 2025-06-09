@@ -13,4 +13,7 @@ public class SavedFreelancerDTO {
     private UUID freelancerId;
     private String firstName;
     private String description;
+    private String occupation;
+    private double rating;
+    private String lastName;
 }

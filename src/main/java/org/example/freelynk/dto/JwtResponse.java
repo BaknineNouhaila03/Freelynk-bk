@@ -10,4 +10,5 @@ public class JwtResponse {
     private String refreshToken;
     private String role;
     private String email;
+    private String firstName;
 }

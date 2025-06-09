@@ -30,4 +30,6 @@ public interface SavedFreelancerRepository extends JpaRepository<SavedFreelancer
     
     // Delete a saved freelancer
     void deleteByClientIdAndFreelancerId(UUID clientId, UUID freelancerId);
+    @Query("SELECT sf.freelancerId FROM SavedFreelancer sf WHERE sf.clientId = :clientId")
+List<UUID> findFreelancerIdsByClientId(@Param("clientId") UUID clientId);
 }

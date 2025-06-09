@@ -32,7 +32,7 @@ public class AuthService {
         String accessToken = jwtUtils.generateAccessToken(user.getEmail());
         String refreshToken = jwtUtils.generateRefreshToken(user.getEmail());
 
-        return new JwtResponse(accessToken, refreshToken, user.getRole().name(), user.getEmail());
+        return new JwtResponse(accessToken, refreshToken, user.getRole().name(), user.getEmail(),user.getFirstName());
     }
 
     public String registerClient(SignupClientRequest request) {
@@ -93,6 +93,6 @@ public class AuthService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         String newAccessToken = jwtUtils.generateAccessToken(user.getEmail());
-        return new JwtResponse(newAccessToken, refreshToken, user.getRole().name(), user.getEmail());
+        return new JwtResponse(newAccessToken, refreshToken, user.getRole().name(), user.getEmail(),user.getFirstName());
     }
 }

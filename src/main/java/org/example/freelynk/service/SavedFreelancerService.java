@@ -48,4 +48,8 @@ public class SavedFreelancerService {
             .findByClientIdAndFreelancerId(clientId, freelancerId)
             .isPresent();
     }
+    public List<UUID> getBookmarkedFreelancerIds(UUID clientId) {
+    // Assuming you have a repository method or can query your saved_freelancers table
+    return savedFreelancerRepository.findFreelancerIdsByClientId(clientId);
+}
 }
