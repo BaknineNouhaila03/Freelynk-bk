@@ -1,6 +1,8 @@
 package org.example.freelynk.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -40,6 +42,8 @@ public class Freelancer extends User {
     private Double rating;
 
     @OneToMany(mappedBy = "freelancer", cascade = CascadeType.ALL)
+    @JsonManagedReference("freelancer-reviews") // Add this
+
     private List<Review> reviews;
 
     @OneToMany(mappedBy = "freelancer", cascade = CascadeType.ALL)
@@ -50,7 +54,8 @@ public class Freelancer extends User {
             joinColumns = @JoinColumn(name = "freelancer_id", referencedColumnName = "user_id", columnDefinition = "uuid"),
             inverseJoinColumns = @JoinColumn(name = "project_id", referencedColumnName = "project_id")
     )
-    @JsonBackReference
+    @JsonManagedReference("freelancer-projects") // Add this
+
     private List<Project> savedProjects;
 
 

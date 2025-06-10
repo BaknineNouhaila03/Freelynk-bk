@@ -1,46 +1,78 @@
 package org.example.freelynk.controller;
 
-import org.example.freelynk.model.Client;
-import org.example.freelynk.model.Review;
+import org.example.freelynk.dto.ReviewRequestDto;
+import org.example.freelynk.dto.ReviewResponseDto;
 import org.example.freelynk.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/freelancers/{freelancerId}/reviews")
+@RequestMapping("/api/reviews")
+@CrossOrigin(origins = "*")
 public class ReviewController {
 
-    private final ReviewService reviewService;
-
     @Autowired
-    public ReviewController(ReviewService reviewService) {
-        this.reviewService = reviewService;
+    private ReviewService reviewService;
+
+    /**
+     * Get all reviews for a specific freelancer
+     * GET /api/reviews/freelancer/{freelancerId}
+     */
+    @GetMapping("/freelancer/{freelancerId}")
+    public ResponseEntity<List<ReviewResponseDto>> getReviewsForFreelancer(
+            @PathVariable UUID freelancerId) {
+        try {
+            List<ReviewResponseDto> reviews = reviewService.getReviewsForFreelancer(freelancerId);
+            return ResponseEntity.ok(reviews);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
-
-    @PostMapping
-    public ResponseEntity<Review> createReview(
+    /**
+     * Add a review for a freelancer (client must be authenticated)
+     * POST /api/reviews/freelancer/{freelancerId}
+     */
+    @PostMapping("/freelancer/{freelancerId}")
+    public ResponseEntity<ReviewResponseDto> addReviewForFreelancer(
             @PathVariable UUID freelancerId,
-            @RequestBody Review review
-    ) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Client client = (Client) authentication.getPrincipal();
-
-
-        Review createdReview = reviewService.createReview(freelancerId, review, client);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdReview);
+             @RequestBody ReviewRequestDto reviewRequest,
+            Authentication authentication) {
+        try {
+            // Extract client email from JWT token
+            String clientEmail = authentication.getName();
+            
+            ReviewResponseDto review = reviewService.addReviewForFreelancer(
+                freelancerId, clientEmail, reviewRequest);
+            
+            return ResponseEntity.status(HttpStatus.CREATED).body(review);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
-    @GetMapping
-    public ResponseEntity<List<Review>> getReviews(@PathVariable UUID freelancerId) {
-        List<Review> reviews = reviewService.getReviews(freelancerId);
-        return ResponseEntity.ok(reviews);
+    /**
+     * Get reviews given by a specific client (optional endpoint)
+     * GET /api/reviews/client/my-reviews
+     */
+    @GetMapping("/client/my-reviews")
+    public ResponseEntity<List<ReviewResponseDto>> getMyReviews(Authentication authentication) {
+        try {
+            String clientEmail = authentication.getName();
+            List<ReviewResponseDto> reviews = reviewService.getReviewsByClient(clientEmail);
+            return ResponseEntity.ok(reviews);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

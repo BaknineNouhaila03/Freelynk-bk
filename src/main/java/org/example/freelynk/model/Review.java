@@ -8,16 +8,18 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "ratings")
+@Table(name = "reviews") // Fixed: changed from "ratings" to "reviews"
 public class Review {
 
     @Id
     @GeneratedValue
-    @Column(name = "rating_id", updatable = false, nullable = false)
+    @Column(name = "review_id", updatable = false, nullable = false) 
     private UUID id;
 
     @ManyToOne
@@ -26,10 +28,12 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name = "freelancer_id", nullable = false)
+    @JsonBackReference("freelancer-reviews") 
+
     private Freelancer freelancer;
 
-    @Column(name = "level")
-    private Integer level; // 1-5 stars rating level
+    @Column(name = "rating") 
+    private Integer rating; 
 
     @Column
     private String comment;
