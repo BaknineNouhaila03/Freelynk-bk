@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+
 @Entity
 @Table(name = "gigs")
 @Data
@@ -33,6 +34,9 @@ public class Gig {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @JsonIgnore
-
     private Freelancer freelancer;
+
+    public UUID getFreelancerId() {
+        return freelancer != null ? freelancer.getId() : null;
+    }
 }

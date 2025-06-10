@@ -36,6 +36,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/clients/**").permitAll()
+                    .requestMatchers("/api/users/**").permitAll()
                 .requestMatchers("/api/freelancers/**").permitAll()
                 .requestMatchers("/api/projects/**").permitAll()
                 .requestMatchers("/api/bids/**").permitAll()
