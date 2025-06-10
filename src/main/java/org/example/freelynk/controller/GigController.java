@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+
 @RestController
 @RequestMapping("/api/gigs")
 public class GigController {
@@ -53,6 +54,18 @@ public ResponseEntity<?> getMyGigs() {
     List<Gig> gigs = gigService.getGigsForFreelancer(freelancer);
     return ResponseEntity.ok(gigs);
 }
+
+@GetMapping("/freelancer/{freelancerId}")
+public ResponseEntity<?> getGigsByFreelancer(@PathVariable UUID freelancerId) {
+    try {
+        List<Gig> gigs = gigService.getGigsForFreelancerId(freelancerId);
+        return ResponseEntity.ok(gigs);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Error retrieving gigs: " + e.getMessage());
+    }
+}
+
 
 
 }

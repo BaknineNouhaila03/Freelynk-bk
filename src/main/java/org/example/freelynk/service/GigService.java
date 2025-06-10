@@ -93,4 +93,8 @@ public class GigService {
     public List<Gig> getGigsForFreelancer(Freelancer freelancer) {
         return gigRepository.findByFreelancer(freelancer);
     }
+public List<Gig> getGigsForFreelancerId(UUID freelancerId) {
+    return gigRepository.findByFreelancerId(freelancerId);
+}
+
 }
