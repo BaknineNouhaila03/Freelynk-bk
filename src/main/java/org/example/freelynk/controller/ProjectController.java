@@ -8,8 +8,10 @@ import org.example.freelynk.model.Client;
 import org.example.freelynk.model.Project;
 import org.example.freelynk.model.User;
 import org.example.freelynk.security.SecurityUtil;
+import org.example.freelynk.service.FreelancerService;
 import org.example.freelynk.service.NotificationService;
 import org.example.freelynk.service.ProjectService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,10 +22,13 @@ public class ProjectController {
 
     private final ProjectService projectService;
     private final NotificationService notificationService;
+    private final FreelancerService freelancerService; // Add this
 
-    public ProjectController(ProjectService projectService,NotificationService notificationService) {
+
+    public ProjectController(ProjectService projectService, NotificationService notificationService, FreelancerService freelancerService) {
         this.projectService = projectService;
         this.notificationService = notificationService;
+        this.freelancerService = freelancerService; // Add this
     }
 
     @PostMapping("/add")
@@ -44,6 +49,18 @@ public class ProjectController {
         List<Project> projects = projectService.getAllProjects();
         return ResponseEntity.ok(projects);
     }
+    // New endpoint for recommended projects
+    @GetMapping("/recommended/{email}")
+    public ResponseEntity<?> getRecommendedProjects(@PathVariable String email) {
+        try {
+            List<Project> recommendedProjects = projectService.getRecommendedProjectsForFreelancer(email);
+            return ResponseEntity.ok(recommendedProjects);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error fetching recommended projects: " + e.getMessage());
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getProjectByID(@PathVariable  UUID  id ) {
         Project project = projectService.getProjectById(id);
