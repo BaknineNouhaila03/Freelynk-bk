@@ -2,6 +2,7 @@ package org.example.freelynk.service;
 
 import org.example.freelynk.dto.ReviewRequestDto;
 import org.example.freelynk.dto.ReviewResponseDto;
+import org.example.freelynk.dto.ReviewStatsDto;
 import org.example.freelynk.model.Client;
 import org.example.freelynk.model.Freelancer;
 import org.example.freelynk.model.Review;
@@ -42,7 +43,30 @@ public class ReviewService {
             .map(this::convertToResponseDto)
             .collect(Collectors.toList());
     }
+public ReviewStatsDto getReviewStatsForFreelancer(UUID freelancerId) {
+        Freelancer freelancer = freelancerRepository.findById(freelancerId)
+            .orElseThrow(() -> new RuntimeException("Freelancer not found"));
 
+    List<Review> reviews = reviewRepository.findByFreelancerOrderByCreatedAtDesc(freelancer);
+    
+    int[] starBreakdown = new int[5]; // Index 0=1-star, 1=2-star, ..., 4=5-star
+    double totalRating = 0;
+    
+    for (Review review : reviews) {
+        int rating = review.getRating();
+        if (rating >= 1 && rating <= 5) {
+            starBreakdown[5 - rating]++; // 5-star → index 0, 1-star → index 4
+            totalRating += rating;
+        }
+    }
+    
+    ReviewStatsDto stats = new ReviewStatsDto();
+    stats.setTotalReviews(reviews.size());
+    stats.setStarBreakdown(starBreakdown);
+    stats.setAverageRating(reviews.isEmpty() ? 0 : totalRating / reviews.size());
+    
+    return stats;
+}
     /**
      * Add a review for a freelancer by a client
      */

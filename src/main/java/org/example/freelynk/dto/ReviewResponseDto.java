@@ -13,11 +13,9 @@ public class ReviewResponseDto {
     private String comment;
     private LocalDateTime createdAt;
     
-    // Client information
     private UUID clientId;
     private String clientName;
     
-    // Freelancer information
     private UUID freelancerId;
     private String freelancerName;
 }

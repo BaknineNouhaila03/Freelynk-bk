@@ -9,12 +9,13 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "reviews") // Fixed: changed from "ratings" to "reviews"
+@Table(name = "reviews")
 public class Review {
 
     @Id
@@ -29,7 +30,6 @@ public class Review {
     @ManyToOne
     @JoinColumn(name = "freelancer_id", nullable = false)
     @JsonBackReference("freelancer-reviews") 
-
     private Freelancer freelancer;
 
     @Column(name = "rating") 

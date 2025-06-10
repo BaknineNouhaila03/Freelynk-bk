@@ -2,6 +2,7 @@ package org.example.freelynk.controller;
 
 import org.example.freelynk.dto.ReviewRequestDto;
 import org.example.freelynk.dto.ReviewResponseDto;
+import org.example.freelynk.dto.ReviewStatsDto;
 import org.example.freelynk.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,20 @@ public class ReviewController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+    /**
+ * Get review statistics for a freelancer
+ * GET /api/reviews/freelancer/{freelancerId}/stats
+ */
+@GetMapping("/freelancer/{freelancerId}/stats")
+public ResponseEntity<ReviewStatsDto> getReviewStatsForFreelancer(
+        @PathVariable UUID freelancerId) {
+    try {
+        ReviewStatsDto stats = reviewService.getReviewStatsForFreelancer(freelancerId);
+        return ResponseEntity.ok(stats);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+}
 
     /**
      * Add a review for a freelancer (client must be authenticated)

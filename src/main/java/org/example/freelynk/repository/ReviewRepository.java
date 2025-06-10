@@ -14,6 +14,8 @@ import java.util.UUID;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, UUID> {
 
+    
+
     /**
      * Find all reviews for a specific freelancer, ordered by creation date (newest first)
      */
