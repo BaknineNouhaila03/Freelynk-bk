@@ -31,4 +31,5 @@ public class WebConfig implements WebMvcConfigurer {
                 .setCachePeriod(3600)
                 .resourceChain(false); // Set to false for direct access
     }
+
 }
