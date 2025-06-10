@@ -8,5 +8,5 @@ import java.util.List;
 public class AddGigRequest {
     private String title;
     private String description;
-    private List<String> gigUrls; 
+    private List<String> gigUrls;
 }

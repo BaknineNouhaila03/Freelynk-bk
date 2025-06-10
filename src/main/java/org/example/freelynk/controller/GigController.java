@@ -8,13 +8,10 @@ import org.example.freelynk.model.Freelancer;
 import org.example.freelynk.model.Gig;
 import org.example.freelynk.security.SecurityUtil;
 import org.example.freelynk.service.GigService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/gigs")
@@ -27,10 +24,23 @@ public class GigController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addGig(@RequestBody AddGigRequest request) {
-        Freelancer freelancer = (Freelancer) SecurityUtil.getCurrentUser();
-        Gig savedGig = gigService.addGig(request, freelancer);
-        return ResponseEntity.ok(savedGig);
+    public ResponseEntity<?> addGig(
+            @RequestParam("title") String title,
+            @RequestParam("description") String description,
+            @RequestParam("gigUrls") List<MultipartFile> files) {
+
+        try {
+            Freelancer freelancer = (Freelancer) SecurityUtil.getCurrentUser();
+            AddGigRequest request = new AddGigRequest();
+            request.setTitle(title);
+            request.setDescription(description);
+
+            Gig savedGig = gigService.addGig(request, files, freelancer);
+            return ResponseEntity.ok(savedGig);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error adding gig: " + e.getMessage());
+        }
     }
     @GetMapping("/{id}")
     public ResponseEntity<?> getGigById(@PathVariable UUID id) {
