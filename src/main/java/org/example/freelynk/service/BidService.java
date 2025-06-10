@@ -101,34 +101,38 @@ notificationService.createNotification(clientId, "NEW_BID", "You have a new bid 
         return bidRepository.findByProjectId(projectId);
     }
 
-    @Transactional
-    public void updateBidStatus(UUID bidId, BidStatus newStatus) {
-        Bid bid = bidRepository.findById(bidId)
-                .orElseThrow(() -> new RuntimeException("Bid not found"));
+@Transactional
+public void updateBidStatus(UUID bidId, BidStatus newStatus) {
+    Bid bid = bidRepository.findById(bidId)
+            .orElseThrow(() -> new RuntimeException("Bid not found"));
 
-        Project project = bid.getProject();
+    Project project = bid.getProject();
 
-        if (newStatus == BidStatus.ACCEPTED && bid.getStatus() != BidStatus.ACCEPTED) {
-            bid.setStatus(BidStatus.ACCEPTED);
-            bidRepository.save(bid);
+    if (newStatus == BidStatus.ACCEPTED && bid.getStatus() != BidStatus.ACCEPTED) {
+        // 1. Update bid status to ACCEPTED
+        bid.setStatus(BidStatus.ACCEPTED);
+        bidRepository.save(bid);
 
-            project.setFreelancer(bid.getFreelancer());
-            projectRepository.save(project);
+        // 2. Assign freelancer to project
+        project.setFreelancer(bid.getFreelancer());
+        
+        // 3. Set project status to ONGOING (assuming ProjectStatus enum exists)
+        project.setStatus(ProjectStatus.ONGOING); // Make sure Project has this field
+        
+        projectRepository.save(project);
 
-            List<Bid> otherBids = bidRepository.findByProjectId(project.getId());
-            for (Bid other : otherBids) {
-                if (!other.getId().equals(bid.getId())) {
-                    other.setStatus(BidStatus.REJECTED);
-                    bidRepository.save(other);
-
-                }
+        // 4. Reject all other bids for this project
+        List<Bid> otherBids = bidRepository.findByProjectId(project.getId());
+        for (Bid other : otherBids) {
+            if (!other.getId().equals(bid.getId())) {
+                other.setStatus(BidStatus.REJECTED);
+                bidRepository.save(other);
             }
-        } else {
-            bid.setStatus(newStatus);
-            bidRepository.save(bid);
-            
-    String freelancerId = bid.getFreelancer().getId().toString();
         }
+    } else {
+        // For non-ACCEPTED status updates
+        bid.setStatus(newStatus);
+        bidRepository.save(bid);
     }
-
+}
 }

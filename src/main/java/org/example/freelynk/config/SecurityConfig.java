@@ -42,6 +42,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/gigs/**").permitAll()
                 .requestMatchers("/api/savedFreelancers/**").permitAll()
                 .requestMatchers("/api/notifications/**").permitAll()
+                .requestMatchers("/api/byFreelancer/**").permitAll()
+
                 // Add WebSocket endpoints
                 .requestMatchers("/ws/**").permitAll()
                 .requestMatchers("/ws/info/**").permitAll()
