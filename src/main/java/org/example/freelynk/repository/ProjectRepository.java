@@ -2,6 +2,7 @@ package org.example.freelynk.repository;
 
 import org.example.freelynk.model.Client;
 import org.example.freelynk.model.Project;
+import org.example.freelynk.model.ProjectStatus;
 import org.example.freelynk.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -25,6 +26,15 @@ List<Project> findByBudgetRange(@Param("min") Double min, @Param("max") Double m
     Optional<Project> findById(UUID id);
     // In ProjectRepository.java
 List<Project> findByFreelancerId(UUID freelancerId);
+
+    // Find projects that are not assigned to any freelancer (available projects)
+    List<Project> findByFreelancerIsNull();
+
+    // You can also add a method to find projects by status if needed
+    List<Project> findByStatus(ProjectStatus status);
+
+    // Find available projects by status
+    List<Project> findByFreelancerIsNullAndStatus(ProjectStatus status);
 
 
 }
