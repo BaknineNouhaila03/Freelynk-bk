@@ -7,6 +7,7 @@ import org.example.freelynk.dto.AddGigRequest;
 import org.example.freelynk.model.Freelancer;
 import org.example.freelynk.model.Gig;
 import org.example.freelynk.security.SecurityUtil;
+import org.example.freelynk.service.FreelancerService;
 import org.example.freelynk.service.GigService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +19,11 @@ import org.springframework.web.multipart.MultipartFile;
 public class GigController {
 
     private final GigService gigService;
+    private final FreelancerService freelancerService;
 
-    public GigController(GigService gigService) {
+    public GigController(GigService gigService, FreelancerService freelancerService) {
         this.gigService = gigService;
+        this.freelancerService = freelancerService;
     }
 
     @PostMapping("/add")
@@ -46,10 +49,10 @@ public class GigController {
     public ResponseEntity<?> getGigById(@PathVariable UUID id) {
     Gig gig = gigService.getGigById(id);
     return ResponseEntity.ok(gig);
-}
-@GetMapping("/myGigs")
-public ResponseEntity<?> getMyGigs() {
-    Freelancer freelancer = (Freelancer) SecurityUtil.getCurrentUser();
+    }
+@GetMapping("/freelancers/{freelancerId}")
+public ResponseEntity<?> getGigsByFreelancerId(@PathVariable UUID freelancerId) {
+    Freelancer freelancer = freelancerService.getFreelancerById(freelancerId);
     List<Gig> gigs = gigService.getGigsForFreelancer(freelancer);
     return ResponseEntity.ok(gigs);
 }
