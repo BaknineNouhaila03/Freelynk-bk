@@ -45,7 +45,6 @@ public class SecurityConfig {
                 .requestMatchers("/api/notifications/**").permitAll()
                 .requestMatchers("/api/byFreelancer/**").permitAll()
                 .requestMatchers("/api/recommendations/**").permitAll()
-                // Add WebSocket endpoints
                 .requestMatchers("/ws/**").permitAll()
                 .requestMatchers("/ws/info/**").permitAll()
                 .requestMatchers("/topic/**").permitAll()
@@ -69,7 +68,6 @@ public class SecurityConfig {
         configuration.setAllowCredentials(true);
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        // Apply CORS to all endpoints, including WebSocket
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }

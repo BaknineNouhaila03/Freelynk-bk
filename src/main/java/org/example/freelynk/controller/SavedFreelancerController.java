@@ -18,7 +18,6 @@ public class SavedFreelancerController {
     @Autowired
     private SavedFreelancerService savedFreelancerService;
     
-    // Get all saved freelancers for a client
     @GetMapping("/client/{clientId}")
     public ResponseEntity<List<SavedFreelancerDTO>> getSavedFreelancers(
             @PathVariable UUID clientId) {
@@ -31,7 +30,6 @@ public class SavedFreelancerController {
         }
     }
     
-    // Get all saved freelancer IDs for a client - NEW ENDPOINT
     @GetMapping("/check")
     public ResponseEntity<List<UUID>> getBookmarkedFreelancerIds(
             @RequestParam UUID clientId) {
@@ -43,7 +41,6 @@ public class SavedFreelancerController {
         }
     }
     
-    // Save a freelancer for a client
     @PostMapping("/save")
     public ResponseEntity<String> saveFreelancer(
             @RequestParam UUID clientId,
@@ -58,7 +55,6 @@ public class SavedFreelancerController {
         }
     }
     
-    // Remove a saved freelancer
     @DeleteMapping("/remove")
     public ResponseEntity<String> removeSavedFreelancer(
             @RequestParam UUID clientId,
@@ -71,7 +67,6 @@ public class SavedFreelancerController {
         }
     }
     
-    // Check if specific freelancer is saved
     @GetMapping("/check-single")
     public ResponseEntity<Boolean> isFreelancerSaved(
             @RequestParam UUID clientId,

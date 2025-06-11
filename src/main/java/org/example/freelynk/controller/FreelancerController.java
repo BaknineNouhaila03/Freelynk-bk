@@ -165,7 +165,6 @@ public ResponseEntity<List<Freelancer>> getFreelancersByOccupation(@PathVariable
 }
 
 private String mapOccupationFromUrl(String occupation) {
-    // Create a comprehensive mapping of URL slugs to database occupation values
     Map<String, String> occupationMap = new HashMap<>();
     occupationMap.put("web-development", "Web and App Developmen");
     occupationMap.put("graphic-design", "Graphic & UI/UX design");
@@ -174,12 +173,10 @@ private String mapOccupationFromUrl(String occupation) {
     occupationMap.put("video-animation", "Video & Animation Services");
     occupationMap.put("business-assistance", "Business & Virtual Assistance");
     
-    // Check if we have a direct mapping
     if (occupationMap.containsKey(occupation)) {
         return occupationMap.get(occupation);
     }
     
-    // Fallback for unmapped values
     return Arrays.stream(occupation.replace("-", " ").split(" "))
            .map(word -> word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase())
            .collect(Collectors.joining(" "));

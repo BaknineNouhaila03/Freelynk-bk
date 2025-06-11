@@ -9,7 +9,7 @@ public class SignupFreelancerRequest {
     private String firstName;
     private String lastName;
     private String email;
-    private String profileImage; // Add this field for base64 image data
+    private String profileImage;
     private String password;
     private String confirmPassword;
     private String description;

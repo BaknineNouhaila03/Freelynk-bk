@@ -22,18 +22,17 @@ public class ProjectController {
 
     private final ProjectService projectService;
     private final NotificationService notificationService;
-    private final FreelancerService freelancerService; // Add this
+    private final FreelancerService freelancerService;
 
 
     public ProjectController(ProjectService projectService, NotificationService notificationService, FreelancerService freelancerService) {
         this.projectService = projectService;
         this.notificationService = notificationService;
-        this.freelancerService = freelancerService; // Add this
+        this.freelancerService = freelancerService; 
     }
 
     @PostMapping("/add")
     public ResponseEntity<?> addProject(@RequestBody AddProjectRequest request) {
-        // User currentClient =  SecurityUtil.getCurrentUser(); 
         Project project = projectService.addProject(request);
         return ResponseEntity.ok(project);
     }
@@ -49,7 +48,6 @@ public class ProjectController {
         List<Project> projects = projectService.getAllProjects();
         return ResponseEntity.ok(projects);
     }
-    // New endpoint for recommended projects
     @GetMapping("/recommended/{email}")
     public ResponseEntity<?> getRecommendedProjects(@PathVariable String email) {
         try {
@@ -80,8 +78,7 @@ public ResponseEntity<?> markProjectAsDone(
     try {
         Project updatedProject = projectService.markProjectAsDone(projectId, freelancerId);
         
-        // Get the client ID from the project and send notification
-        UUID clientId = updatedProject.getClient().getId(); // Assuming Project has getClientId()
+        UUID clientId = updatedProject.getClient().getId();
         notificationService.createNotification(
             clientId, 
             "PROJECT_COMPLETED", 

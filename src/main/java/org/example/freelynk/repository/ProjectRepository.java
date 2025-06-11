@@ -12,8 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface ProjectRepository extends JpaRepository<Project, UUID> {
-    // Filter projects by budget range (matching PDF filters)
+public interface ProjectRepository extends JpaRepository<Project, UUID> {    // Filter projects by budget range (matching PDF filters)
 @Query("SELECT p FROM Project p WHERE p.minBudget >= :min AND p.maxBudget <= :max")
 List<Project> findByBudgetRange(@Param("min") Double min, @Param("max") Double max);
 

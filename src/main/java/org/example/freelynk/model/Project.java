@@ -134,7 +134,6 @@ public class Project {
     @Column
     private String description;
 
-    // Option 1: Use array mapping with proper column definition
     @Column(name = "required_skills", columnDefinition = "text[]")
     private String[] requiredSkills;
 
@@ -154,7 +153,7 @@ public class Project {
 
     @ManyToOne
     @JoinColumn(name = "freelancer_id")
-@JsonBackReference("freelancer-projects") // Add this
+@JsonBackReference("freelancer-projects")
     private Freelancer freelancer;
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -177,7 +176,7 @@ public class Project {
         }
 
         return Arrays.stream(requiredSkills)
-                .map(skill -> skill.replaceAll("[{}\"\\s]", "")) // Remove {, }, quotes, and whitespace
+                .map(skill -> skill.replaceAll("[{}\"\\s]", "")) 
                 .filter(skill -> !skill.isEmpty())
                 .collect(Collectors.toList());
     }

@@ -39,12 +39,10 @@ public class FreelancerService {
 public List<Freelancer> getFreelancersBySkills(List<String> skills) {
     List<Freelancer> result = new ArrayList<>();
     for (String skill : skills) {
-        // Try exact match first
         List<String> lowerCaseSkills = Collections.singletonList(skill.toLowerCase());
         List<Freelancer> exactMatch = freelancerRepository.findFreelancersBySkills(lowerCaseSkills);
         
         if (exactMatch.isEmpty()) {
-            // Try partial match
             List<Freelancer> partialMatch = freelancerRepository.findFreelancersBySkillContaining(skill);
             result.addAll(partialMatch);
         } else {
@@ -54,23 +52,19 @@ public List<Freelancer> getFreelancersBySkills(List<String> skills) {
     return result.stream().distinct().collect(Collectors.toList());
 }
 public List<Freelancer> getFreelancersByOccupation(String occupation) {
-    // Try exact match first (case-insensitive)
-    List<Freelancer> exactMatch = freelancerRepository.findByOccupationIgnoreCase(occupation);
+        List<Freelancer> exactMatch = freelancerRepository.findByOccupationIgnoreCase(occupation);
     
     if (exactMatch.isEmpty()) {
-        // Try partial match if no exact match found
         return freelancerRepository.findByOccupationContainingIgnoreCase(occupation);
     }
     
     return exactMatch;
 }
 
-    // Service method to get saved projects
     public List<Project> getSavedProject(Freelancer freelancer) {
         return freelancer.getSavedProjects();
     }
 
-    // Service method to add/remove saved project
     public boolean toggleSavedProject(String freelancerEmail, UUID projectId) {
         try {
             Freelancer freelancer = freelancerRepository.findByEmail(freelancerEmail)
@@ -82,22 +76,19 @@ public List<Freelancer> getFreelancersByOccupation(String occupation) {
             List<Project> savedProjects = freelancer.getSavedProjects();
 
             if (savedProjects.contains(project)) {
-                // Remove from saved projects
                 savedProjects.remove(project);
                 freelancerRepository.save(freelancer);
-                return false; // Removed
+                return false; 
             } else {
-                // Add to saved projects
                 savedProjects.add(project);
                 freelancerRepository.save(freelancer);
-                return true; // Added
+                return true; 
             }
         } catch (Exception e) {
             throw new RuntimeException("Error toggling saved project: " + e.getMessage());
         }
     }
 
-    // Service method to check if project is saved
     public boolean isProjectSaved(String freelancerEmail, UUID projectId) {
         Freelancer freelancer = freelancerRepository.findByEmail(freelancerEmail)
                 .orElseThrow(() -> new RuntimeException("Freelancer not found"));

@@ -46,12 +46,10 @@ public class Bid {
     @Column(nullable = false)
     private BidStatus status;
 
-    // Add this getter to include freelancer ID in JSON response
     public UUID getFreelancerId() {
         return freelancer != null ? freelancer.getId() : null;
     }
 
-    // Optional: Add freelancer email getter for convenience
     public String getFreelancerEmail() {
         return freelancer != null ? freelancer.getEmail() : null;
     }

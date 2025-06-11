@@ -19,10 +19,10 @@ public class Notification {
     private Long id;
 
     @Column(name = "user_id", nullable = false)
-    private UUID userId;  // recipient user
+    private UUID userId; 
 
     @Column(length = 50)
-    private String type;  // e.g. NEW_BID, BID_ACCEPTED
+    private String type; 
 
     @Column(columnDefinition = "TEXT")
     private String message;

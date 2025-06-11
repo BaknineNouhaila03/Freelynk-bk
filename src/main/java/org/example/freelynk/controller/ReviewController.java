@@ -47,17 +47,13 @@ public ResponseEntity<ReviewStatsDto> getReviewStatsForFreelancer(
     }
 }
 
-    /**
-     * Add a review for a freelancer (client must be authenticated)
-     * POST /api/reviews/freelancer/{freelancerId}
-     */
+
     @PostMapping("/freelancer/{freelancerId}")
     public ResponseEntity<ReviewResponseDto> addReviewForFreelancer(
             @PathVariable UUID freelancerId,
              @RequestBody ReviewRequestDto reviewRequest,
             Authentication authentication) {
         try {
-            // Extract client email from JWT token
             String clientEmail = authentication.getName();
             
             ReviewResponseDto review = reviewService.addReviewForFreelancer(

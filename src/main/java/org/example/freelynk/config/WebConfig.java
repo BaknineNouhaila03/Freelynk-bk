@@ -21,7 +21,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Get the absolute path to the uploads directory
         String uploadPath = new File("uploads").getAbsolutePath();
 
         System.out.println("Configuring static resources for path: " + uploadPath);
@@ -29,7 +28,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations("file:" + uploadPath + File.separator)
                 .setCachePeriod(3600)
-                .resourceChain(false); // Set to false for direct access
+                .resourceChain(false); 
     }
 
 }

@@ -28,13 +28,11 @@ public class NotificationController {
         this.notificationService = notificationService;
     }
 
-    // Fetch notifications for a user (pass userId as param or get from auth)
     @GetMapping("/{userId}")
     public List<Notification> getNotifications(@PathVariable UUID userId) {
         return notificationService.getUserNotifications(userId);
     }
 
-    // Mark notification as read
     @PostMapping("/{id}/read")
     public ResponseEntity<Void> markAsRead(@PathVariable Long id) {
         notificationService.markAsRead(id);

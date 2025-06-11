@@ -14,6 +14,7 @@ public class SavedFreelancerDTO {
     private String firstName;
     private String description;
     private String occupation;
-    private double rating;
+    private Double rating;
     private String lastName;
+    private String profileImage;
 }

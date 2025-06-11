@@ -28,7 +28,6 @@ public class BidController {
     @PostMapping
     public ResponseEntity<?> addBid(@RequestBody AddBidRequest request) {
         try {
-            // Validate that freelancer email is provided
             if (request.getFreelancerEmail() == null || request.getFreelancerEmail().trim().isEmpty()) {
                 return ResponseEntity.badRequest()
                         .body(new ErrorResponse("Freelancer email is required"));
@@ -42,7 +41,6 @@ public class BidController {
         }
     }
 
-    // Error response class
     public static class ErrorResponse {
         public String message;
 
@@ -50,7 +48,6 @@ public class BidController {
             this.message = message;
         }
 
-        // Getter for JSON serialization
         public String getMessage() {
             return message;
         }

@@ -26,7 +26,7 @@ public class DebugController {
             File[] files = uploadDir.listFiles();
             info.put("fileCount", files != null ? files.length : 0);
             if (files != null && files.length > 0) {
-                String[] fileNames = new String[Math.min(5, files.length)]; // Show first 5 files
+                String[] fileNames = new String[Math.min(5, files.length)];
                 for (int i = 0; i < fileNames.length; i++) {
                     fileNames[i] = files[i].getName();
                 }
