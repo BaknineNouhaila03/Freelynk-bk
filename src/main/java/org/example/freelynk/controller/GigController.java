@@ -55,16 +55,7 @@ public ResponseEntity<?> getMyGigs() {
     return ResponseEntity.ok(gigs);
 }
 
-@GetMapping("/freelancer/{freelancerId}")
-public ResponseEntity<?> getGigsByFreelancer(@PathVariable UUID freelancerId) {
-    try {
-        List<Gig> gigs = gigService.getGigsForFreelancerId(freelancerId);
-        return ResponseEntity.ok(gigs);
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Error retrieving gigs: " + e.getMessage());
-    }
-}
+
 
 
 

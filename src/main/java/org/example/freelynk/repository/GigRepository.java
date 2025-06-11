@@ -13,7 +13,6 @@ public interface GigRepository extends JpaRepository<Gig, UUID> {
 
     Optional<Gig> findById(UUID id);
     List<Gig> findByFreelancer(Freelancer freelancer);
-    List<Gig> findByFreelancerId(UUID freelancerId);
 
 
     
