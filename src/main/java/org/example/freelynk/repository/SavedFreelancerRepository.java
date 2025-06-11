@@ -14,12 +14,10 @@ import java.util.UUID;
 
 @Repository
 public interface SavedFreelancerRepository extends JpaRepository<SavedFreelancer, Long> {
-    
-@Query("SELECT new org.example.freelynk.dto.SavedFreelancerDTO(" +
-       "sf.freelancerId, f.firstName, f.description,f.occupation,f.rating,f.lastName) " +
-       "FROM SavedFreelancer sf " +
-       "JOIN Freelancer f ON sf.freelancerId = f.id " +
-       "WHERE sf.clientId = :clientId")
+
+    @Query("SELECT new org.example.freelynk.dto.SavedFreelancerDTO(sf.freelancerId, f.firstName, f.description, f.occupation, f.rating, f.lastName, f.profileImage) " +
+            "FROM SavedFreelancer sf JOIN Freelancer f ON sf.freelancerId = f.id " +
+            "WHERE sf.clientId = :clientId")
     List<SavedFreelancerDTO> findSavedFreelancersByClientId(@Param("clientId") UUID clientId);
     
     // Check if a freelancer is already saved by a client

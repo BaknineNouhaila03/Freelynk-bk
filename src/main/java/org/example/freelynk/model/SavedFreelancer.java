@@ -19,7 +19,11 @@ public class SavedFreelancer {
     
     @Column(name = "freelancer_id") 
     private UUID freelancerId;
-    
+    @Column(name = "freelancer_image")
+
+    private String profileImage;
+
+
     public SavedFreelancer() {}
     
     public SavedFreelancer(UUID clientId, UUID freelancerId) {
