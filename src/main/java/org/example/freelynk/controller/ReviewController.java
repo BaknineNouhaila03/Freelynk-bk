@@ -21,10 +21,7 @@ public class ReviewController {
     @Autowired
     private ReviewService reviewService;
 
-    /**
-     * Get all reviews for a specific freelancer
-     * GET /api/reviews/freelancer/{freelancerId}
-     */
+
     @GetMapping("/freelancer/{freelancerId}")
     public ResponseEntity<List<ReviewResponseDto>> getReviewsForFreelancer(
             @PathVariable UUID freelancerId) {
@@ -76,10 +73,6 @@ public ResponseEntity<ReviewStatsDto> getReviewStatsForFreelancer(
         }
     }
 
-    /**
-     * Get reviews given by a specific client (optional endpoint)
-     * GET /api/reviews/client/my-reviews
-     */
     @GetMapping("/client/my-reviews")
     public ResponseEntity<List<ReviewResponseDto>> getMyReviews(Authentication authentication) {
         try {

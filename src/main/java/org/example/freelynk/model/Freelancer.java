@@ -55,7 +55,7 @@ public class Freelancer extends User {
             joinColumns = @JoinColumn(name = "freelancer_id", referencedColumnName = "user_id", columnDefinition = "uuid"),
             inverseJoinColumns = @JoinColumn(name = "project_id", referencedColumnName = "project_id")
     )
-    @JsonManagedReference("freelancer-projects") // Add this
+    @JsonManagedReference("freelancer-projects") 
 
     private List<Project> savedProjects;
 

@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/freelancers")
@@ -145,5 +146,42 @@ public ResponseEntity<List<UUID>> getBookmarkedFreelancers(@RequestParam UUID cl
     } catch (Exception e) {
         return ResponseEntity.badRequest().body(null);
     }
+}
+@GetMapping("/occupation/{occupation}")
+public ResponseEntity<List<Freelancer>> getFreelancersByOccupation(@PathVariable String occupation) {
+    try {
+        // Decode URL-encoded occupation (replace dashes with spaces, etc.)
+        String decodedOccupation = mapOccupationFromUrl(occupation);
+        List<Freelancer> freelancers = freelancerService.getFreelancersByOccupation(decodedOccupation);
+        
+        if (freelancers.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        
+        return new ResponseEntity<>(freelancers, HttpStatus.OK);
+    } catch (Exception e) {
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
+
+private String mapOccupationFromUrl(String occupation) {
+    // Create a comprehensive mapping of URL slugs to database occupation values
+    Map<String, String> occupationMap = new HashMap<>();
+    occupationMap.put("web-development", "Web and App Developmen");
+    occupationMap.put("graphic-design", "Graphic & UI/UX design");
+    occupationMap.put("writing-translation", "Writing and translation");
+    occupationMap.put("digital-marketing", "Digital Marketing");
+    occupationMap.put("video-animation", "Video & Animation Services");
+    occupationMap.put("business-assistance", "Business & Virtual Assistance");
+    
+    // Check if we have a direct mapping
+    if (occupationMap.containsKey(occupation)) {
+        return occupationMap.get(occupation);
+    }
+    
+    // Fallback for unmapped values
+    return Arrays.stream(occupation.replace("-", " ").split(" "))
+           .map(word -> word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase())
+           .collect(Collectors.joining(" "));
 }
 }

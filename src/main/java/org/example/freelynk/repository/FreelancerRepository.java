@@ -18,4 +18,7 @@ public interface FreelancerRepository extends JpaRepository<Freelancer, UUID> {
     List<Freelancer> findFreelancersBySkillContaining(@Param("skill") String skill);
 
     Optional<Freelancer> findByEmail(String email);
+    List<Freelancer> findByOccupationIgnoreCase(String occupation);
+    List<Freelancer> findByOccupationContainingIgnoreCase(String occupation);
+    
 }

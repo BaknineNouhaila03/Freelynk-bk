@@ -11,7 +11,6 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/recommendations")
-@CrossOrigin(origins = "http://localhost:3000")
 public class RecommendationController {
 
     @Autowired

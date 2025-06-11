@@ -53,6 +53,17 @@ public List<Freelancer> getFreelancersBySkills(List<String> skills) {
     }
     return result.stream().distinct().collect(Collectors.toList());
 }
+public List<Freelancer> getFreelancersByOccupation(String occupation) {
+    // Try exact match first (case-insensitive)
+    List<Freelancer> exactMatch = freelancerRepository.findByOccupationIgnoreCase(occupation);
+    
+    if (exactMatch.isEmpty()) {
+        // Try partial match if no exact match found
+        return freelancerRepository.findByOccupationContainingIgnoreCase(occupation);
+    }
+    
+    return exactMatch;
+}
 
     // Service method to get saved projects
     public List<Project> getSavedProject(Freelancer freelancer) {
