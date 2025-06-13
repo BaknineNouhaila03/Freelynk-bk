@@ -61,41 +61,5 @@ public List<Freelancer> getFreelancersByOccupation(String occupation) {
     return exactMatch;
 }
 
-    public List<Project> getSavedProject(Freelancer freelancer) {
-        return freelancer.getSavedProjects();
-    }
-
-    public boolean toggleSavedProject(String freelancerEmail, UUID projectId) {
-        try {
-            Freelancer freelancer = freelancerRepository.findByEmail(freelancerEmail)
-                    .orElseThrow(() -> new RuntimeException("Freelancer not found"));
-
-            Project project = projectRepository.findById(projectId)
-                    .orElseThrow(() -> new RuntimeException("Project not found"));
-
-            List<Project> savedProjects = freelancer.getSavedProjects();
-
-            if (savedProjects.contains(project)) {
-                savedProjects.remove(project);
-                freelancerRepository.save(freelancer);
-                return false; 
-            } else {
-                savedProjects.add(project);
-                freelancerRepository.save(freelancer);
-                return true; 
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Error toggling saved project: " + e.getMessage());
-        }
-    }
-
-    public boolean isProjectSaved(String freelancerEmail, UUID projectId) {
-        Freelancer freelancer = freelancerRepository.findByEmail(freelancerEmail)
-                .orElseThrow(() -> new RuntimeException("Freelancer not found"));
-
-        return freelancer.getSavedProjects().stream()
-                .anyMatch(project -> project.getId().equals(projectId));
-    }
-
 
 }
